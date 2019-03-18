@@ -20,28 +20,27 @@
 </template>
 
 <script>
+  import {mapState} from 'vuex'
   export default {
     name: "NavFooter",
-    data(){
-      return {
-        flag: 1
-      }
+    computed: {
+      ...mapState(['flag'])
     },
     methods: {
       map() {
-        this.flag = 1
+        this.$store.commit('updateFlag', 1)
         this.$router.push({path: '/map'})
       },
       info() {
-        this.flag = 2
+        this.$store.commit('updateFlag', 2)
         this.$router.push({path: '/info'})
       },
       message() {
-        this.flag = 3
+        this.$store.commit('updateFlag', 3)
         this.$router.push({path: '/message'})
       },
       attention() {
-        this.flag = 4
+        this.$store.commit('updateFlag', 4)
         this.$router.push({path: '/attention'})
       },
     }

@@ -15,10 +15,23 @@
   export default {
     name: "info",
     data() {
-      return {}
+      return {
+        data: ''
+      }
     },
     components: {
       NavHeader
+    },
+    mounted() {
+      this.showData()
+    },
+    methods: {
+      async showData() {
+        await this.axios.get('/car/index.php/index/index/powstainfor').then(res => {
+          console.log(res.data)
+          this.data = res.data
+        })
+      }
     }
   }
 </script>

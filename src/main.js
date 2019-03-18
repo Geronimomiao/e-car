@@ -11,17 +11,25 @@ import axios from 'axios'
 import animate from 'animate.css'
 import BaiduMap from 'vue-baidu-map'
 
+import createStore from './vuex/store'
+import qs from 'qs';
+
 Vue.config.productionTip = false
+
 Vue.use(ElementUI)
 Vue.use(VueAxios,axios);
 Vue.use(animate)
 Vue.use(BaiduMap, {
   ak: 'OGQnghxuwbYbqcTm3mzrEGQbGVMdv4id'
 })
+Vue.prototype.$qs = qs;
+
+const store = createStore()
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

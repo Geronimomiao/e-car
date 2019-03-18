@@ -1,5 +1,5 @@
 <template>
-  <div id="map">
+  <div id="b_map">
     <nav-header>
       <span slot="title" >充电桩地图</span>
     </nav-header>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+
   import NavHeader from '../components/NavHeader'
   import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
 
@@ -33,8 +34,8 @@
     },
     methods: {
       async showData() {
-        await this.axios.get('http://120.78.219.168/index.php/index/index/powstainfor').then(res => {
-          console.log(res.data)
+        await this.axios.get('/car/index.php/index/index/powstainfor').then(res => {
+          // console.log(res.data)
           this.data = res.data
         })
       },
@@ -42,6 +43,7 @@
         return {lng: lng, lat: lat}
       },
       goForDetail(psid) {
+        this.$store.commit('updateFlag', 2)
         this.$router.push({
           name: 'infoDetail',
           params: {
@@ -54,7 +56,7 @@
 </script>
 
 <style lang="stylus">
-  #map
+  #b_map
     .bm-view
       position: fixed
       top: 3rem

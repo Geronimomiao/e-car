@@ -15,11 +15,31 @@
   export default {
     name: "infoDetail",
     data() {
-      return {}
+      return {
+        data: ''
+      }
     },
     components: {
       NavHeader
-    }
+    },
+    mounted() {
+      this.showData()
+    },
+    methods: {
+      async showData() {
+        console.log(this.$route.params.psid)
+        let postData = this.$qs.stringify({
+          psid: this.$route.params.psid
+        });
+        await this.axios({
+          method: 'post',
+          url: '/car/index.php/index/index/getinfor',
+          data: postData
+        }).then(res => {
+          console.log(res)
+        })
+      }
+    },
   }
 </script>
 
