@@ -31,7 +31,7 @@
           console.log(res.data)
           this.data = res.data
         })
-      }
+      },
     }
   }
 </script>

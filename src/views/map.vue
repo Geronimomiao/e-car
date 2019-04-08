@@ -1,12 +1,14 @@
 <template>
   <div id="b_map">
     <nav-header>
-      <span slot="title" >充电桩地图</span>
+      <span slot="title">充电桩地图</span>
     </nav-header>
-    <baidu-map class="bm-view" :center="center" :zoom="zoom" >
+    <baidu-map class="bm-view" :center="center" :zoom="zoom">
       <bm-marker v-for="item in data" :position='getPosition(item.lng, item.lat)'
-                 :icon="{url: 'http://wsmpage.cn/e-charge/e-charge.png', size: {width: 60, height: 32}}"
-                 @click="goForDetail(item.psid)"></bm-marker>
+      :icon="{url: 'http://wsmpage.cn/e-charge/e-charge.png', size: {width: 20, height: 20}}"
+      @click="goForDetail(item.psid)"></bm-marker>
+      <bm-marker class="my-location" :position='getPosition(this.my_location.x, this.my_location.y)' :icon="{url: 'http://wsmpage.cn/map/err_map.png', size: {width: 20, height: 20}}">
+      </bm-marker>
     </baidu-map>
   </div>
 </template>
@@ -22,7 +24,8 @@
       return {
         center: {lng: 117.211056, lat: 39.1434},
         zoom: 11,
-        data: '',
+        data: [],
+        my_location: ''
       }
     },
     components: {
@@ -31,12 +34,30 @@
     },
     mounted() {
       this.showData()
+      this.getLocation()
     },
     methods: {
-      async showData() {
-        await this.axios.get('/car/index.php/index/index/powstainfor').then(res => {
-          // console.log(res.data)
-          this.data = res.data
+      showData() {
+        this.axios.get('/car/index.php/index/index/powstainfor').then(res => {
+          console.log(res.data)
+
+          res.data.forEach(item => {
+            this.axios.get('/api/geoconv/v1/', {
+              params: {
+                coords: `${item.lng},${item.lat}`,
+                from: 1,
+                to: 5,
+                ak: 'OGQnghxuwbYbqcTm3mzrEGQbGVMdv4id',
+              }
+            }).then(res => {
+              item.lng = res.data.result[0].x
+              item.lat = res.data.result[0].y
+            }).then(() => {
+              this.data = res.data
+              console.log(res.data)
+            })
+          })
+
         })
       },
       getPosition(lng, lat) {
@@ -50,6 +71,21 @@
             psid: psid
           }
         })
+      },
+      getLocation() {
+        navigator.geolocation.getCurrentPosition((p) => {
+          this.axios.get('/api/geoconv/v1/', {
+            params: {
+              coords: `${p.coords.longitude},${p.coords.latitude}`,
+              from: 1,
+              to: 5,
+              ak: 'OGQnghxuwbYbqcTm3mzrEGQbGVMdv4id',
+            }
+          }).then(res => {
+            // console.log(res.data.result)
+            this.my_location = res.data.result[0]
+          })
+        })
       }
     }
   }
@@ -57,13 +93,18 @@
 
 <style lang="stylus">
   #b_map
+    .BMap_Marker
+      img
+        width: 100%
     .bm-view
       position: fixed
       top: 3rem
       bottom: 3.5rem
       width: 100%
-
-      .anchorBL
+    .my-location
+      z-index 10 !important
+    .anchorBL
+      img
         display: none
 
 </style>

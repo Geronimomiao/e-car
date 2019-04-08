@@ -17,7 +17,14 @@ module.exports = {
         pathRewrite:{
           '^/car':''
         }
-      }
+      },
+      '/api': {
+        target: "http://api.map.baidu.com",
+        changeOrigin:true,
+        pathRewrite:{
+          '^/api':''
+        }
+      },
     },
 
     // Various Dev Server settings
