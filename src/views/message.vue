@@ -59,7 +59,7 @@
         this.$router.push({path: '/map'})
       },
       history() {
-
+        this.$router.push({path: '/history'})
       }
     }
   }

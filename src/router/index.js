@@ -8,6 +8,7 @@ import info from '@/views/info'
 import infoDetail from '@/views/infoDetail'
 import attention from '@/views/attention'
 import message from '@/views/message'
+import history from '@/views/history'
 
 Vue.use(Router)
 
@@ -42,7 +43,12 @@ export default new Router({
           path: '/message',
           name: 'message',
           component: message
-        }
+        },
+        {
+          path: '/history',
+          name: 'history',
+          component: history
+        },
       ]
     }
   ]
