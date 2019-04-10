@@ -1,11 +1,9 @@
 <template>
   <div id="index">
-    <transition  mode="out-in"
-                 enter-active-class="animated fadeIn faster"
-                 leave-active-class="animated fadeOut faster">
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
+    <transition mode="out-in"
+                enter-active-class="animated fadeIn faster"
+                leave-active-class="animated fadeOut faster">
+      <router-view/>
     </transition>
     <nav-footer></nav-footer>
   </div>
@@ -13,6 +11,7 @@
 
 <script>
   import NavFooter from '../components/NavFooter'
+
   export default {
     name: "index",
     data() {
