@@ -11,6 +11,7 @@ import axios from 'axios'
 import animate from 'animate.css'
 import BaiduMap from 'vue-baidu-map'
 
+
 import createStore from './vuex/store'
 import qs from 'qs';
 

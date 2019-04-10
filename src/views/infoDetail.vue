@@ -36,7 +36,8 @@
           url: '/car/index.php/index/index/getinfor',
           data: postData
         }).then(res => {
-          console.log(res)
+          this.data = res.data
+          console.log(this.data)
         })
       }
     },
