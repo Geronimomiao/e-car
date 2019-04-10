@@ -5,12 +5,19 @@
     </nav-header>
     <baidu-map class="bm-view" :center="center" :zoom="zoom">
       <bm-marker v-for="item in data" :position='getPosition(item.lng, item.lat)' @click="getDetail(item)"
-                 :icon="{url: 'http://wsmpage.cn/e-charge/e-charge.png', size: {width: 20, height: 20}}"
-                 ></bm-marker>
+                 :icon="{url: 'http://wsmpage.cn/e-charge/e-charge.png', size: {width: 20, height: 20}}">
+      </bm-marker>
       <bm-marker class="my-location" :position='getPosition(this.my_location.x, this.my_location.y)'
                  :icon="{url: 'http://wsmpage.cn/map/err_map.png', size: {width: 20, height: 20}}">
       </bm-marker>
+
+      <bm-local-search v-if="recommend" :nearby="nearby" :keyword="keywords" :auto-viewport="true" :panel="false" :autoViewport="false" :pageCapacity="4" :selectFirstResult="false"></bm-local-search>
+      <bm-circle v-if="recommend" :center="nearby.center" :radius="nearby.radius"></bm-circle>
+
+      <bm-driving v-if="line" :start="getPosition(this.my_location.x, this.my_location.y)" :end="nearby.center" :auto-viewport="true"></bm-driving>
+
     </baidu-map>
+
     <div @click="close">
       <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
         <mark-layer v-if="flag"></mark-layer>
@@ -18,13 +25,14 @@
     </div>
 
     <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-      <detail v-if="flag" :flag="flag" :detail="detail_item"></detail>
+      <detail v-if="flag" :flag="flag" :recommend="recommend" :detail="detail_item" @showRecommend="showRecommend" @showLine="showLine"></detail>
     </transition>
   </div>
 </template>
 
 <script>
 
+  import { mapState } from 'vuex'
   import NavHeader from '../components/NavHeader'
   import MarkLayer from '../components/MarkLayer'
   import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
@@ -40,7 +48,10 @@
         data: [],
         my_location: '',
         flag: 0,
-        detail_item: ''
+        detail_item: '',
+        recommend: 0,
+        line: 0,
+        keywords: ['小吃', '银行', '酒店', '商场', '地铁站'],
       }
     },
     components: {
@@ -48,6 +59,9 @@
       BaiduMap,
       MarkLayer,
       Detail,
+    },
+    computed: {
+      ...mapState(['nearby'])
     },
     mounted() {
       this.showData()
@@ -103,6 +117,14 @@
         this.flag = 1
         this.detail_item = item
         // console.log(this.detail_item)
+      },
+      showRecommend() {
+        this.flag = 0
+        this.recommend = 1
+      },
+      showLine() {
+        this.flag = 0
+        this.line = 1
       }
     }
   }

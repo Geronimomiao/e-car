@@ -19,8 +19,8 @@
           <span>车辆状态</span>
           <i class="el-icon-caret-right"></i>
         </div>
-        <div class="item">
-          <span>远程控制</span>
+        <div class="item" @click="history">
+          <span>行程记录</span>
           <i class="el-icon-caret-right"></i>
         </div>
         <div class="item">
@@ -58,6 +58,9 @@
       map() {
         this.$router.push({path: '/map'})
       },
+      history() {
+
+      }
     }
   }
 </script>

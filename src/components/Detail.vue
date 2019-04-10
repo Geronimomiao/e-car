@@ -5,7 +5,7 @@
         <div class="item">
           {{detail.psname}}
         </div>
-        <div class="item">
+        <div class="item" @click="showLine">
           到这去   <i class="el-icon-location"></i>
         </div>
       </div>
@@ -13,7 +13,7 @@
         <div class="item" @click="goForDetail(detail.psid)">
           充电站详情 <i class="el-icon-document"></i>
         </div>
-        <div class="item">
+        <div class="item" @click="showRecommend">
           发现周边 <i class="el-icon-view"></i>
         </div>
       </div>
@@ -24,7 +24,7 @@
 <script>
   export default {
     name: "Detail",
-    props: ['flag', 'detail'],
+    props: ['flag', 'detail', 'recommend'],
     data() {
       return {}
     },
@@ -40,6 +40,22 @@
             psid: psid
           }
         })
+      },
+      showRecommend() {
+        let center = {
+          lng: this.detail.lng,
+          lat: this.detail.lat,
+        }
+        this.$store.commit('updateTarget', center)
+        this.$emit('showRecommend')
+      },
+      showLine() {
+        let center = {
+          lng: this.detail.lng,
+          lat: this.detail.lat,
+        }
+        this.$store.commit('updateTarget', center)
+        this.$emit('showLine')
       },
     }
   }
