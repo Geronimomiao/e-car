@@ -11,10 +11,12 @@
                  :icon="{url: 'http://wsmpage.cn/map/err_map.png', size: {width: 20, height: 20}}">
       </bm-marker>
 
-      <bm-local-search v-if="recommend" :nearby="nearby" :keyword="keywords" :auto-viewport="true" :panel="false" :autoViewport="false" :pageCapacity="4" :selectFirstResult="false"></bm-local-search>
+      <bm-local-search v-if="recommend" :nearby="nearby" :keyword="keywords" :auto-viewport="true" :panel="false"
+                       :autoViewport="false" :pageCapacity="4" :selectFirstResult="false"></bm-local-search>
       <bm-circle v-if="recommend" :center="nearby.center" :radius="nearby.radius"></bm-circle>
 
-      <bm-driving v-if="line" :start="getPosition(this.my_location.x, this.my_location.y)" :end="nearby.center" :auto-viewport="true"></bm-driving>
+      <bm-driving v-if="line" :start="getPosition(this.my_location.x, this.my_location.y)" :end="nearby.center"
+                  :auto-viewport="true"></bm-driving>
 
     </baidu-map>
 
@@ -25,14 +27,15 @@
     </div>
 
     <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-      <detail v-if="flag" :flag="flag" :recommend="recommend" :detail="detail_item" @showRecommend="showRecommend" @showLine="showLine"></detail>
+      <detail v-if="flag" :flag="flag" :recommend="recommend" :detail="detail_item" @showRecommend="showRecommend"
+              @showLine="showLine"></detail>
     </transition>
   </div>
 </template>
 
 <script>
 
-  import { mapState } from 'vuex'
+  import {mapState} from 'vuex'
   import NavHeader from '../components/NavHeader'
   import MarkLayer from '../components/MarkLayer'
   import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
@@ -64,8 +67,8 @@
       ...mapState(['nearby'])
     },
     mounted() {
-      this.showData()
       this.getLocation()
+      this.showData()
     },
     methods: {
       showData() {
@@ -93,19 +96,19 @@
         return {lng: lng, lat: lat}
       },
       getLocation() {
-        navigator.geolocation.getCurrentPosition((p) => {
-          this.axios.get('/api/geoconv/v1/', {
-            params: {
-              coords: `${p.coords.longitude},${p.coords.latitude}`,
-              from: 1,
-              to: 5,
-              ak: 'OGQnghxuwbYbqcTm3mzrEGQbGVMdv4id',
-            }
-          }).then(res => {
-            // console.log(res.data.result)
-            this.my_location = res.data.result[0]
-          })
-        })
+
+        var self = this;
+        //全局的this在方法中不能使用，需要重新定义一下
+        var geolocation = new BMap.Geolocation();
+        console.log(geolocation)
+        //调用百度地图api 中的获取当前位置接口
+        geolocation.getCurrentPosition(function (r) {
+          if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            //获取当前位置经纬度
+            console.log(r)
+          }
+        });
+
       },
       close() {
         this.flag = 0
@@ -125,7 +128,8 @@
       showLine() {
         this.flag = 0
         this.line = 1
-      }
+      },
+
     }
   }
 </script>
